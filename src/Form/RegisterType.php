@@ -20,21 +20,30 @@ class RegisterType extends AbstractType
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Votre prénom',
-                'constraints' => new Length( 0, 2, 30),
+                'constraints' => new Length([
+                    'min' => 2,
+                    'max' => 30
+                ]),
                 'attr' => [
                     'placeholder' => 'Ex. Samuel'
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Votre nom',
-                'constraints' => new Length( 0, 2, 30),
+                'constraints' => new Length([
+                    'min' => 2,
+                    'max' => 30
+                ]),
                 'attr' => [
                     'placeholder' => 'Ex. Dupont'
                 ]
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Votre email',
-                'constraints' => new Length( 0, 2, 30),
+                'constraints' => new Length([
+                    'min' => 2,
+                    'max' => 60
+                ]),
                 'attr' => [
                     'placeholder' => 'Ex. exemple@gmail.com'
                 ]
@@ -44,8 +53,18 @@ class RegisterType extends AbstractType
                 'invalid_message' => 'Le mot de passe et la confirmation doivent être identique.',
                 'label' => 'Votre mot de passe',
                 'required' => true,
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmation de mot de passe']
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'attr' => [
+                        'placeholder' => 'Votre mot de passe'
+                    ]
+                ],
+                'second_options' => [
+                    'label' => 'Confirmation de mot de passe',
+                    'attr' => [
+                        'placeholder' => 'Confirmer votre mot de passe'
+                    ]
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'S\'inscrire'
