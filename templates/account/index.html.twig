@@ -6,6 +6,7 @@
     <h1>Mon compte</h1>
     <p>Bienvenue {{ app.user.firstname }} {{ app.user.lastname }}</p>
 
+    <a href="{{ path('account_password') }}">Modifier mon mot de passe</a>
     {# TODO:
             - Possibilité de pouvoir modifier le mot de passe de passe
             - Possibilité de pouvoir modifier l'adresse
