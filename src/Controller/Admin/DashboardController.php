@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
+use App\Entity\Product;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -28,6 +30,9 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
+        // Ajoutés grâce à la commande => symfony console make:admin:crud
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Catégories', 'fa fa-fas fa-bookmark', Category::class);
+        yield MenuItem::linkToCrud('Produits', 'fa fa-fas fa-box-open', Product::class);
     }
 }
