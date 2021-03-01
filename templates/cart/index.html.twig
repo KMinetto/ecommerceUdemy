@@ -1,20 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Mon panier{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/ecommerceUdemy/src/Controller/CartController.php'|file_link(0) }}">src/Controller/CartController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/ecommerceUdemy/templates/cart/index.html.twig'|file_link(0) }}">templates/cart/index.html.twig</a></code></li>
-    </ul>
-</div>
+    {% set bigTotal = null %}
+    <h1>Mon panier</h1>
+    <p>Retrouvez l'ensemble des produits que vous avez ajoutés à votre panier.</p>
+    <h2>Mon panier</h2>
+    <table class="table mt-4">
+        <thead>
+        <tr>
+            <th scope="col">Produits</th>
+            <th scope="col"></th>
+            <th scope="col">Quantité</th>
+            <th scope="col">Prix</th>
+            <th scope="col">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for products in cart %}
+            {% set quantity = products.quantity %}
+            {% set price = (products.product.price / 100)|number_format(2, ',', '.') %}
+            {% set total = ((products.product.price * products.quantity) / 100)|number_format(2, ',', '.') %}
+            <tr>
+                <th>
+                    <img width="50px" height="50px" src="uploads/Products/{{ products.product.illustration }}" alt="{{ products.product.name }}">
+                </th>
+                <th>
+                    {{ products.product.name }} <br>
+                    <small>{{ products.product.subtitle }}</small>
+                </th>
+                <td>x {{ quantity }}</td>
+                <td>{{ price }} €</td>
+                <td>{{ total }}</td>
+            </tr>
+            {% set bigTotal = bigTotal + (products.product.price * products.quantity) %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-right mb-5">
+        <b>Nombre de produit :</b> {{ cart|length }} <br>
+        <b>Total :</b> {{ (bigTotal / 100)|number_format(2, ',', '.') }} <br>
+        <a href="#" class="btn btn-success mt-3">Valider mon panier</a>
+    </div>
 {% endblock %}
