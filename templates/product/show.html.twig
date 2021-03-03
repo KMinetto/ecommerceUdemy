@@ -16,7 +16,7 @@
             <span class="product-page-price">{{ (product.price / 100)|number_format(2, ',', '.') }} €</span>
             <hr>
             <p>{{ product.descirption }}</p>
-            <a class="btn btn-secondary" href="#">Ajouter au panier</a>
+            <a class="btn btn-secondary" href="{{ path('add_to_cart', { id: product.id }) }}">Ajouter au panier</a>
         </div>
     </div>
 
