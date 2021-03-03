@@ -8,40 +8,58 @@
     <h1>Mon panier</h1>
     <p>Retrouvez l'ensemble des produits que vous avez ajoutés à votre panier.</p>
     <h2>Mon panier</h2>
-    <table class="table mt-4">
-        <thead>
-        <tr>
-            <th scope="col">Produits</th>
-            <th scope="col"></th>
-            <th scope="col">Quantité</th>
-            <th scope="col">Prix</th>
-            <th scope="col">Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for products in cart %}
-            {% set quantity = products.quantity %}
-            {% set price = (products.product.price / 100)|number_format(2, ',', '.') %}
-            {% set total = ((products.product.price * products.quantity) / 100)|number_format(2, ',', '.') %}
+    {% if cart|length > 0 %}
+        <table class="table mt-4">
+            <thead>
             <tr>
-                <th>
-                    <img width="50px" height="50px" src="uploads/Products/{{ products.product.illustration }}" alt="{{ products.product.name }}">
-                </th>
-                <th>
-                    {{ products.product.name }} <br>
-                    <small>{{ products.product.subtitle }}</small>
-                </th>
-                <td>x {{ quantity }}</td>
-                <td>{{ price }} €</td>
-                <td>{{ total }}</td>
+                <th scope="col">Produits</th>
+                <th scope="col"></th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Total</th>
+                <th scope="col"></th>
             </tr>
-            {% set bigTotal = bigTotal + (products.product.price * products.quantity) %}
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="text-right mb-5">
-        <b>Nombre de produit :</b> {{ cart|length }} <br>
-        <b>Total :</b> {{ (bigTotal / 100)|number_format(2, ',', '.') }} <br>
-        <a href="#" class="btn btn-success mt-3">Valider mon panier</a>
-    </div>
+            </thead>
+            <tbody>
+            {% for products in cart %}
+                {% set quantity = products.quantity %}
+                {% set price = (products.product.price / 100)|number_format(2, ',', '.') %}
+                {% set total = ((products.product.price * products.quantity) / 100)|number_format(2, ',', '.') %}
+                <tr>
+                    <th>
+                        <img width="50px" height="50px" src="uploads/Products/{{ products.product.illustration }}" alt="{{ products.product.name }}">
+                    </th>
+                    <th>
+                        {{ products.product.name }} <br>
+                        <small>{{ products.product.subtitle }}</small>
+                    </th>
+                    <td>
+                        <a href="{{ path('take_of_to_cart', {'id': products.product.id}) }}">
+                            <img class="ml-3" height="18px" src="{{ asset('assets/img/minus.png') }}" alt="took of products">
+                        </a>
+                        x {{ quantity }}
+                        <a href="{{ path('add_to_cart', {'id': products.product.id}) }}">
+                            <img height="18px" src="{{ asset('assets/img/plus.png') }}" alt="add products">
+                        </a>
+                    </td>
+                    <td>{{ price }} €</td>
+                    <td>{{ total }}</td>
+                    <td>
+                        <a href="{{ path('delete_to_cart', {'id': products.product.id}) }}">
+                            <img height="18px" src="{{ asset('assets/img/delete.png') }}" alt="Delete img">
+                        </a>
+                    </td>
+                </tr>
+                {% set bigTotal = bigTotal + (products.product.price * products.quantity) %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-right mb-5">
+            <b>Nombre de produit :</b> {{ cart|length }} <br>
+            <b>Total :</b> {{ (bigTotal / 100)|number_format(2, ',', '.') }} <br>
+            <a href="#" class="btn btn-success mt-3">Valider mon panier</a>
+        </div>
+    {% else %}
+        <h4 class="text-center">Vous n'avez pas encore ajouter d'article dans votre panier</h4>
+    {% endif %}
 {% endblock %}
