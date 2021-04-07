@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block content %}
+    <h2>Je passe ma commande</h2>
+    <p>Choisissez vos préférences avant de passer à la suite de votre commande.</p>
+    <hr>
+    <div class="col-md-6">
+{#        <p>Choisir mon adresse de livraison</p>#}
+        {% set formHtml  %}
+            {{ form(form) }}
+        {% endset %}
+
+        {{ formHtml|replace({ '[br]' : '<br />' })|raw }}
+        <p>Choisir mon transporteur</p>
+    </div>
+    <div class="col-md-6">
+        <p>Récap de ma commande</p>
+        <p>Bouton pour payer</p>
+    </div>
+{% endblock %}
