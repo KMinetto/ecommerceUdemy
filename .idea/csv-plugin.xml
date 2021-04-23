@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\templates\order\add.html.twig">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\templates\order\index.html.twig">
           <value>
             <Attribute>
