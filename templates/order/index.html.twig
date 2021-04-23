@@ -6,16 +6,35 @@
     <h2>Je passe ma commande</h2>
     <p>Choisissez vos préférences avant de passer à la suite de votre commande.</p>
     <hr>
-    <div class="col-md-6">
-{#        <p>Choisir mon adresse de livraison</p>#}
-        {% set formHtml  %}
-            {{ form(form) }}
-        {% endset %}
+    <div class="d-flex">
+        <div class="col-md-6">
+            {% set formHtml  %}
+                {{ form(form) }}
+            {% endset %}
 
-        {{ formHtml|replace({ '[br]' : '<br />' })|raw }}
-    </div>
-    <div class="col-md-6">
-        <p>Récap de ma commande</p>
-        <p>Bouton pour payer</p>
+            {{ formHtml|replace({ '[br]' : '<br />' })|raw }}
+        </div>
+        <div class="col-md-6">
+            <div class="text-center">
+                <b>Récap de ma commande</b>
+                <p>Retrouvez le récapitulatif de vos produits</p>
+            </div>
+            {% for key,product in cart %}
+                    <div class="order-summary">
+                        <div class="row {% if key > 0 %} mt-2 {% endif %}">
+                            <div class="col-2">
+                                <img width="50px" height="50px" src="uploads/Products/{{ product.product.illustration }}" alt="{{ product.product.name }}">
+                            </div>
+                            <div class="col-8 my-auto">
+                                {{ product.product.name }}
+                                <small>{{ product.product.subtitle }}</small>
+                            </div>
+                            <div class="col-2 my-auto">
+                                x {{ product.quantity }}
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
