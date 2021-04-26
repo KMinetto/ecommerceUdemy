@@ -49,10 +49,10 @@
 
             <br>
             <strong>Sous-total : </strong> {{ (bigTotal /100)|number_format(2, ',', '.') }} € <br>
-            <strong>Livraison : </strong> {{ carrier.price|number_format(2, ',', '.') }} €
+            <strong>Livraison : </strong> {{ (carrier.price / 100)|number_format(2, ',', '.') }} €
             <hr>
-            <strong>Total : </strong> {{ ((bigTotal /100) + carrier.price)|number_format(2, ',', '.') }} €
-            <a id="checkout-button" class="btn btn-block btn-success mt-3">Payer | {{ ((bigTotal /100) + carrier.price)|number_format(2, ',', '.') }} €</a>
+            <strong>Total : </strong> {{ ((bigTotal /100) + (carrier.price / 100))|number_format(2, ',', '.') }} €
+            <a id="checkout-button" class="btn btn-block btn-success mt-3">Payer | {{ ((bigTotal /100) + (carrier.price / 100))|number_format(2, ',', '.') }} €</a>
         </div>
     </div>
     {% block javascript %}

@@ -45,7 +45,7 @@ class StripeController extends AbstractController
         $productForStripe[] = [
             'price_data' => [
                 'currency' => 'eur',
-                'unit_amount' => $order->getCarrierPrice() * 100,
+                'unit_amount' => $order->getCarrierPrice(),
                 'product_data' => [
                     'name' => $order->getCarrierName(),
                     'images' => [$YOUR_DOMAIN],
@@ -57,7 +57,6 @@ class StripeController extends AbstractController
         //Api key
         Stripe::SetApiKey('sk_test_51IkX7MKhhCHPcauo0aarfTkTXQdyyvKXhdS7Ln5T1HL7bg7hwFND6cOm7Fu4HaFOToc0TZp5s4pzLFk7RVzFpBxA007mN2if9Z');
 
-
         //Checkout session
         $checkout_session = Session::create([
             'customer_email' => $this->getUser()->getEmail(),
@@ -66,9 +65,12 @@ class StripeController extends AbstractController
                 $productForStripe
             ],
             'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . '/success.html',
-            'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
+            'success_url' => $YOUR_DOMAIN . '/commandes/success/{CHECKOUT_SESSION_ID}',
+            'cancel_url' => $YOUR_DOMAIN . '/commandes/error/{CHECKOUT_SESSION_ID}',
         ]);
+
+        $order->setStripSessionId($checkout_session->id);
+        $entity->flush();
 
         return new JsonResponse(['id' => $checkout_session->id]);
     }
