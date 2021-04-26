@@ -56,6 +56,15 @@ class Order
      */
     private $isPaid;
 
+    public function getTotal()
+    {
+        $total = null;
+        foreach ($this->getOrderDetails()->getValues() as $product) {
+            $total += ($product->getPrice() + $product->getQuantity());
+        }
+        return $total;
+    }
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
