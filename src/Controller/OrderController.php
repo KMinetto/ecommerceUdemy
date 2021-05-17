@@ -67,6 +67,8 @@ class OrderController extends AbstractController
             $delivery_content .= '<br>'.$delivery->getCountry();
 
             $order = new Order();
+            $reference = $date->format('dmY').'-'.uniqid('', true);
+            $order->setReference($reference);
             $order->setUser($this->getUser());
             $order->setCreatedAt($date);
             $order->setCarrierName($carrier->getName());
@@ -92,7 +94,8 @@ class OrderController extends AbstractController
             return $this->render('order/add.html.twig', [
                 'cart' => $cart->getFull(),
                 'carrier' => $carrier,
-                'delivery' => $delivery_content
+                'delivery' => $delivery_content,
+                'reference' => $order->getReference()
             ]);
         }
 
