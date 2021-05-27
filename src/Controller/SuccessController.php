@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Classes\Cart;
+use App\Classes\Mail;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,10 @@ class SuccessController extends AbstractController
             $this->entity->flush();
         }
         //TODO: Envoyer un e-mail pour confirmer sa commande
+        $mail = new Mail();
+        $content = "Bonjour ".$order->getUser()->getFirstname()."Merci pour votre commande<br><br>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda eveniet expedita illum ipsa laboriosam pariatur, perferendis quos repellendus, reprehenderit rerum sequi voluptatem. Atque dolore eaque explicabo nam, nostrum quod voluptates.";
+        $mail->send($order->getUser()->getEmail(), $order->getUser()->getFirstname(), 'Votre commande sur EcommerceUdemy est bien validée', $content);
+
         //TODO: Afficher les infos de sa commande
 
         return $this->render('success/index.html.twig', [
