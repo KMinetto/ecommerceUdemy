@@ -31,11 +31,11 @@ class SuccessController extends AbstractController
         }
 
         //TODO: Modifier le statut isPaid de notre commande en mettant 1
-        if (!$order->getIsPaid()) {
+        if ($order->getState() === 0) {
             //TODO: Vider la session "cart"
             $cart->remove();
 
-            $order->setIsPaid(1);
+            $order->setState(1);
             $this->entity->flush();
         }
         //TODO: Envoyer un e-mail pour confirmer sa commande

@@ -3,18 +3,32 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Order;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 
 class OrderCrudController extends AbstractCrudController
 {
+    private EntityManagerInterface $entity;
+    private $crudUrlGenerator;
+
+    public function __construct(EntityManagerInterface $entity, CrudUrlGenerator $crudUrlGenerator)
+    {
+        $this->entity = $entity;
+        $this->crudUrlGenerator = $crudUrlGenerator;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Order::class;
@@ -22,7 +36,46 @@ class OrderCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        return $actions->add('index', 'detail');
+        $updatePreparation = Action::new('updatePreparation', 'Préparation en cours', 'fas fa-box-open')
+            ->linkToCrudAction('updatePreparation');
+        $deliveryPreparation = Action::new('deliveryPreparation', 'Livraison en cours', 'fas fa-truck')
+            ->linkToCrudAction('deliveryPreparation');
+        return $actions
+            ->add('detail', $updatePreparation)
+            ->add('detail', $deliveryPreparation)
+            ->add('index', 'detail');
+    }
+
+    public function updatePreparation(AdminContext $context)
+    {
+        $order = $context->getEntity()->getInstance();
+        $order->setState(2);
+        $this->entity->flush();
+
+        $this->addFlash('notice', "<span style='color:green;'><strong>La commande ".$order->getReference()." est bien en <u>cours de préparation</u>></strong></span>");
+
+        $url = $this->crudUrlGenerator->build()
+            ->setController(OrderCrudController::class)
+            ->setAction('index')
+            ->generateUrl();
+
+        return $this->redirect($url);
+    }
+
+    public function deliveryPreparation(AdminContext $context)
+    {
+        $order = $context->getEntity()->getInstance();
+        $order->setState(3);
+        $this->entity->flush();
+
+        $this->addFlash('notice', "<span style='color:orange;'><strong>La commande ".$order->getReference()." est bien en <u>cours de livraison</u></strong></span>");
+
+        $url = $this->crudUrlGenerator->build()
+            ->setController(OrderCrudController::class)
+            ->setAction('index')
+            ->generateUrl();
+
+        return $this->redirect($url);
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -36,10 +89,16 @@ class OrderCrudController extends AbstractCrudController
             IdField::new('id'),
             DateField::new('createdAt', 'Passée le'),
             TextField::new('user.fullname', 'Utilisateur'),
+            TextEditorField::new('delivery', 'Adresse de livraison')->onlyOnDetails(),
             MoneyField::new('total')->setCurrency('EUR'),
             TextField::new('carrierName', 'Transporteur'),
             MoneyField::new('carrierPrice', 'Frais de port')->setCurrency('EUR'),
-            BooleanField::new('isPaid', 'Payée'),
+            ChoiceField::new('state')->setChoices([
+                'Non payée' => 0,
+                'Payée' => 1,
+                'Préparation en cours' => 2,
+                "Livraison en cours" => 3
+            ]),
             ArrayField::new('orderDetails', 'Produits achetées')->hideOnIndex(),
         ];
     }
