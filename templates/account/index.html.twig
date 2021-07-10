@@ -6,10 +6,11 @@
     <h1>Mon compte</h1>
     <p>Bienvenue {{ app.user.firstname }} {{ app.user.lastname }}</p>
 
-    <a href="{{ path('account_password') }}">Modifier mon mot de passe</a>
-    <a href="{{ path('account_address') }}">Mes adresses</a>
-    <a href="{{ path('account_order') }}">Mes commandes</a>
-    {# TODO:
-            - Avoir une page "Mes commandes"
-    #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin') }}">Accéder au back office</a> <br>
+    {% endif %}
+    
+    <a href="{{ path('account_password') }}">Modifier mon mot de passe</a> <br>
+    <a href="{{ path('account_address') }}">Mes adresses</a> <br>
+    <a href="{{ path('account_order') }}">Mes commandes</a> <br>
 {% endblock %}
