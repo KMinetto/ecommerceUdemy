@@ -5,11 +5,28 @@
 {% block content %}
     <h1>Mon compte</h1>
     <p>Bienvenue {{ app.user.firstname }} {{ app.user.lastname }}</p>
-
-    <a href="{{ path('account_password') }}">Modifier mon mot de passe</a>
-    <a href="{{ path('account_address') }}">Mes adresses</a>
-    <a href="{{ path('account_order') }}">Mes commandes</a>
-    {# TODO:
-            - Avoir une page "Mes commandes"
-    #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <small><a href="{{ path('admin') }}">Accéder au back office</a></small> <br>
+    {% endif %}
+    
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <div class="account-item text-center">
+                <img src="{{ asset('assets/img/login.png') }}" alt="Modifier mon mot de passe"> <br>
+                <a href="{{ path('account_password') }}">Modifier mon mot de passe</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="account-item text-center">
+                <img src="{{ asset('assets/img/map.png') }}" alt="Mes adresses"> <br>
+                <a href="{{ path('account_address') }}">Mes adresses</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="account-item text-center">
+                <img src="{{ asset('assets/img/shopping-bag.png') }}" alt="Mes commandes"> <br>
+                <a href="{{ path('account_order') }}">Mes commandes</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
